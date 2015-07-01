@@ -5,6 +5,8 @@
 FROM ubuntu:latest
 MAINTAINER mwaeckerlin
 
+ENV MAX_BODY_SIZE 10M
+
 RUN apt-get install -y nginx
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 #RUN echo "resolver 192.168.99.1 valid=300s;" >> /etc/nginx/nginx.conf
@@ -20,6 +22,7 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 #                fastcgi_index index.php;
 #                #include fastcgi_params;
 #        }
+RUN sed -i '/http *{/aclient_max_body_size '${MAX_BODY_SIZE}'\;' /etc/nginx/nginx.conf
 RUN sed -i 's,\(access_log.*\);,\1 combined;,' /etc/nginx/nginx.conf
 RUN sed -i 's,\(error_log.*\);,\1 warn;,' /etc/nginx/nginx.conf
 RUN sed -i '/^[ \t]*#location ~ \\.php$ {/,/^[ \t]*#}/{s/#//;s/127.0.0.1/php/;/sock/d}' /etc/nginx/sites-enabled/default
