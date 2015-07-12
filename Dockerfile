@@ -7,6 +7,7 @@ MAINTAINER mwaeckerlin
 
 ENV WEB_ROOT_PATH /usr/share/nginx/html
 ENV MAX_BODY_SIZE 10M
+ENV AUTOINDEX off
 
 RUN apt-get install -y nginx
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
@@ -17,7 +18,7 @@ VOLUME /etc/nginx
 VOLUME /usr/share/nginx/html
 EXPOSE 80 443
 CMD sed -i '/client_max_body_size/d;/http *{/aclient_max_body_size '${MAX_BODY_SIZE}'\;' /etc/nginx/nginx.conf \
-  && sed -i 's,^\([ \t]*root[ \t]*\).*$,\1'${WEB_ROOT_PATH}';,' /etc/nginx/sites-enabled/default \
+  && sed -i '/autoindex/d;s,^\([ \t]*root[ \t]*\).*$,\1'${WEB_ROOT_PATH}';,;/^[ \t]*root.*/aautoindex '${AUTOINDEX}'\;' /etc/nginx/sites-enabled/default \
   && if test -n "${PHP_PORT}"; then \
        sed -i '/^[ \t]*#location ~ \\.php$ {/,/^[ \t]*#}/{s/#//;s/127.0.0.1/php/;/sock/d}' /etc/nginx/sites-enabled/default; \
      fi \
