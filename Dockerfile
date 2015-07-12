@@ -17,7 +17,7 @@ VOLUME /etc/nginx
 VOLUME /usr/share/nginx/html
 EXPOSE 80 443
 CMD sed -i '/client_max_body_size/d;/http *{/aclient_max_body_size '${MAX_BODY_SIZE}'\;' /etc/nginx/nginx.conf \
-  && sed -i 's,^\( *root *\).*$,\1${WEB_ROOT_PATH};,' /etc/nginx/sites-enabled/default \
+  && sed -i 's,^\([ \t]*root[ \t]*\).*$,\1'${WEB_ROOT_PATH}';,' /etc/nginx/sites-enabled/default \
   && if test -n "${PHP_PORT}"; then \
        sed -i '/^[ \t]*#location ~ \\.php$ {/,/^[ \t]*#}/{s/#//;s/127.0.0.1/php/;/sock/d}' /etc/nginx/sites-enabled/default; \
      fi \
