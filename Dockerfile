@@ -7,6 +7,7 @@ FROM ubuntu:wily
 MAINTAINER mwaeckerlin
 
 ENV WEB_ROOT_PATH /usr/share/nginx/html
+ENV WEB_ROOT /
 ENV MAX_BODY_SIZE 10M
 ENV AUTOINDEX off
 
@@ -35,6 +36,7 @@ CMD cp /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && \
      fi \
   && if test -n "${LDAP_PORT}" -a -n "$LDAP_HOST" -a -n "$LDAP_BASE_DN" -a -n "$LDAP_BIND_DN" -a -n "$LDAP_BIND_PASS"; then \
        sed -i '/location \/ {/a      satisfy any;    auth_request /auth-proxy;' /etc/nginx/sites-enabled/default; \
+       sed -i 's,location / {,location ${WEB_ROOT} {,' /etc/nginx/sites-enabled/default; \
        sed -i '/^}/i  location = /auth-proxy {\n    #internal;\n    fastcgi_param LDAP_HOST "'${LDAP_HOST}'";\n    fastcgi_param LDAP_BASE_DN "'${LDAP_BASE_DN}'";\n    fastcgi_param LDAP_BIND_DN "'${LDAP_BIND_DN}'";\n    fastcgi_param LDAP_BIND_PASS "'${LDAP_BIND_PASS}'";\n    fastcgi_param LDAP_REALM "'${LDAP_REALM}'";\n    include fastcgi.conf;\n    fastcgi_param  SCRIPT_FILENAME    $document_root/index.php;\n    fastcgi_param  SCRIPT_NAME        index.php;\n    fastcgi_pass ldap:9000;\n    fastcgi_pass_request_body off;\n  }' /etc/nginx/sites-enabled/default; \
        echo "LDAP Authentication Enabled"; \
      fi \
