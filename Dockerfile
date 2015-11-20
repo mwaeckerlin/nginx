@@ -22,6 +22,8 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN sed -i 's,\(access_log.*\);,\1 combined;,' /etc/nginx/nginx.conf
 RUN sed -i 's,\(error_log.*\);,\1 warn;,' /etc/nginx/nginx.conf
 RUN rm /etc/nginx/sites-enabled/default
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
 VOLUME /etc/nginx
 VOLUME /usr/share/nginx/html
