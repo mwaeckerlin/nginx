@@ -33,7 +33,7 @@ CMD cp /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && \
     sed -i '/client_max_body_size/d;/http *{/aclient_max_body_size '${MAX_BODY_SIZE}'\;' /etc/nginx/nginx.conf \
   && sed -i '/autoindex/d;s,^\([ \t]*root[ \t]*\).*$,\1'${WEB_ROOT_PATH}';,;/^[ \t]*root.*/aautoindex '${AUTOINDEX}'\;' /etc/nginx/sites-enabled/default \
   && if test -n "${PHP_PORT}"; then \
-       sed -i -e 's,\([ \t]*index .*\);,\1 index.php;,;/^[ \t]*#location ~ \\.php$ {/,/^[ \t]*#}/{s/#//;s/127.0.0.1/php/;/sock/d}' -e 's,^include snippets/fastcgi-php.conf;,include fastcgi.conf;,g' /etc/nginx/sites-enabled/default; \
+       sed -i -e 's,^\([ \t]*index .*\);,\1 index.php;,;/^[ \t]*#location ~ \\.php$ {/,/^[ \t]*#}/{s/#//;s/127.0.0.1/php/;/sock/d}' -e 's,^include snippets/fastcgi-php.conf;,include fastcgi.conf;,g' /etc/nginx/sites-enabled/default; \
        echo "PHP Enabled"; \
      fi \
   && if test -n "${LDAP_PORT}" -a -n "$LDAP_HOST" -a -n "$LDAP_BASE_DN" -a -n "$LDAP_BIND_DN" -a -n "$LDAP_BIND_PASS"; then \
