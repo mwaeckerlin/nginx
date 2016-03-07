@@ -5,6 +5,7 @@
 
 FROM ubuntu:wily
 MAINTAINER mwaeckerlin
+ENV TERM xterm
 
 ENV WEB_ROOT_PATH /usr/share/nginx/html
 ENV WEB_ROOT /
@@ -17,15 +18,20 @@ ENV LDAP_BIND_DN ""
 ENV LDAP_BIND_PASS ""
 ENV LDAP_REALM "Restricted"
 
+ENV ERROR_PAGE ""
+ENV LOCATION_ROOT_RULES ""
+
 RUN apt-get update
 RUN apt-get install -y nginx-full less emacs-nox
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN sed -i 's,\(access_log.*\);,\1 combined;,' /etc/nginx/nginx.conf
 RUN sed -i 's,\(error_log.*\);,\1 warn;,' /etc/nginx/nginx.conf
 RUN rm /etc/nginx/sites-enabled/default
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
 ADD start.sh /start.sh
+CMD /start.sh
 
 VOLUME /etc/nginx
 VOLUME /usr/share/nginx/html
 EXPOSE 80 443
-CMD /start.sh
