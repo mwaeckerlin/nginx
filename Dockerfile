@@ -3,7 +3,7 @@
 # docker run -d --name myservice-ldap -e "" mwaeckerlin/ldap-auth
 # docker run -d --name myservice --link myservice-ldap:ldap --link myservice-php:php -v $(pwd):/usr/share/nginx/html:ro -p 80:80 mwaeckerlin/nginx
 
-FROM ubuntu:wily
+FROM ubuntu
 MAINTAINER mwaeckerlin
 ENV TERM xterm
 
