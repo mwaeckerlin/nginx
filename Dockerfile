@@ -3,9 +3,8 @@
 # docker run -d --name myservice-ldap -e "" mwaeckerlin/ldap-auth
 # docker run -d --name myservice --link myservice-ldap:ldap --link myservice-php:php -v $(pwd):/usr/share/nginx/html:ro -p 80:80 mwaeckerlin/nginx
 
-FROM ubuntu
+FROM mwaeckerlin/ubuntu-base
 MAINTAINER mwaeckerlin
-ENV TERM xterm
 
 ENV WEB_ROOT_PATH /usr/share/nginx/html
 ENV WEB_ROOT /
@@ -22,7 +21,7 @@ ENV ERROR_PAGE ""
 ENV LOCATION_ROOT_RULES ""
 
 RUN apt-get update
-RUN apt-get install -y nginx-full less emacs-nox
+RUN apt-get install -y nginx-full
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN sed -i 's,\(access_log.*\);,\1 combined;,' /etc/nginx/nginx.conf
 RUN sed -i 's,\(error_log.*\);,\1 warn;,' /etc/nginx/nginx.conf
