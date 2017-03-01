@@ -3,10 +3,11 @@
 if test -e /etc/nginx/sites-enabled/default; then
     rm /etc/nginx/sites-enabled/default
 fi
+export ENV_WEB_ROOT_PATH=$(env | grep ENV_WEB_ROOT_PATH | head -1 | sed 's,[^=]*=,,')
 if test -z "$(ls -A /etc/nginx/sites-enabled)"; then
     cp /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
     sed -i '/client_max_body_size/d;/http *{/aclient_max_body_size '${MAX_BODY_SIZE}'\;' /etc/nginx/nginx.conf
-    sed -i '/autoindex/d;s,^\([ \t]*root[ \t]*\).*$,\1'${WEB_ROOT_PATH}';,;/^[ \t]*root.*/aautoindex '${AUTOINDEX}'\;\n'"${ERROR_PAGE}" /etc/nginx/sites-enabled/default
+    sed -i '/autoindex/d;s,^\([ \t]*root[ \t]*\).*$,\1'${ENV_WEB_ROOT_PATH:-$WEB_ROOT_PATH}';,;/^[ \t]*root.*/aautoindex '${AUTOINDEX}'\;\n'"${ERROR_PAGE}" /etc/nginx/sites-enabled/default
     if test -n "${PHP_PORT}"; then
         sed -i -e 's,^\([ \t]*index .*\);,\1 index.php;,;/^[ \t]*#location ~ \\.php$ {/,/^[ \t]*#}/{s/#//;s/127.0.0.1/php/;/sock/d}' -e 's,^include snippets/fastcgi-php.conf;,include fastcgi.conf;,g' /etc/nginx/sites-enabled/default
         echo "PHP Enabled"
