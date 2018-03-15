@@ -10,6 +10,9 @@ ENV WEB_ROOT_PATH /usr/share/nginx/html
 ENV WEB_ROOT /
 ENV MAX_BODY_SIZE 10M
 ENV AUTOINDEX off
+ENV HTTP_PORT 80
+ENV HTTPS_PORT 443
+
 
 ENV LDAP_HOST ""
 ENV LDAP_BASE_DN ""
@@ -29,4 +32,4 @@ RUN rm /etc/nginx/sites-enabled/default
 
 VOLUME /etc/nginx
 VOLUME /usr/share/nginx/html
-EXPOSE 80 443
+EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
