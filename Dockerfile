@@ -27,8 +27,9 @@ RUN sed -i 's,access_log .*,access_log /dev/stdout combined;,' /etc/nginx/nginx.
 RUN mkdir -p /usr/share/nginx
 RUN mkdir /run/nginx
 RUN chown -R $WWWUSER /run/nginx /etc/nginx
-RUN chgrp -R 0 /run/nginx /etc/nginx
-RUN chmod -R g=u /run/nginx /etc/nginx
+RUN chgrp -R 0 /run/nginx /etc/nginx /var/tmp/nginx
+RUN chmod -R g=u /run/nginx /etc/nginx /var/tmp/nginx
+RUN rm -r /var/log/nginx /var/lib/nginx
 RUN /cleanup.sh
 USER $WWWUSER
 
