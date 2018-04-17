@@ -21,14 +21,12 @@ ENV CONTAINERNAME       "nginx"
 RUN apk add nginx
 ADD default.conf /etc/nginx/conf.d/default.conf
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-RUN sed '/error_log/d' /etc/nginx/nginx.conf
+RUN sed -i '/error_log/d' /etc/nginx/nginx.conf
 RUN echo "error_log stderr notice;" >> /etc/nginx/nginx.conf
 RUN sed -i 's,access_log .*,access_log /dev/stdout combined;,' /etc/nginx/nginx.conf
 RUN mkdir -p /usr/share/nginx
 RUN mkdir /run/nginx
-RUN chown $WWWUSER /run/nginx
+RUN chown -R $WWWUSER /run/nginx /etc/nginx
 RUN /cleanup.sh
 
-VOLUME /etc/nginx
-VOLUME ${WEB_ROOT_PATH}
 EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
