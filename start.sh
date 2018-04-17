@@ -26,3 +26,4 @@ if test -n "$LDAP_HOST" -a -n "$LDAP_BIND_DN" -a -n "$LDAP_BIND_PASS"; then
 fi
 
 /usr/sbin/nginx
+

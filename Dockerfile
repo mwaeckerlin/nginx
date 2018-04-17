@@ -5,8 +5,8 @@ ENV WEB_ROOT_PATH /var/lib/nginx/html
 ENV WEB_ROOT /
 ENV MAX_BODY_SIZE 10M
 ENV AUTOINDEX off
-ENV HTTP_PORT 80
-ENV HTTPS_PORT 443
+ENV HTTP_PORT 8080
+ENV HTTPS_PORT 8443
 
 ENV LDAP_HOST           ""
 ENV LDAP_BASE_DN        ""
@@ -27,6 +27,9 @@ RUN sed -i 's,access_log .*,access_log /dev/stdout combined;,' /etc/nginx/nginx.
 RUN mkdir -p /usr/share/nginx
 RUN mkdir /run/nginx
 RUN chown -R $WWWUSER /run/nginx /etc/nginx
+RUN chgrp -R 0 /run/nginx /etc/nginx
+RUN chmod -R g=u /run/nginx /etc/nginx
 RUN /cleanup.sh
+USER $WWWUSER
 
 EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
