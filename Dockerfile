@@ -1,5 +1,6 @@
 FROM mwaeckerlin/base
 MAINTAINER mwaeckerlin
+ARG wwwuser="nginx"
 
 ENV WEB_ROOT_PATH /var/lib/nginx/html
 ENV WEB_ROOT /
@@ -17,6 +18,7 @@ ENV LDAP_REALM          "Restricted"
 ENV ERROR_PAGE          ""
 ENV LOCATION_ROOT_RULES ""
 
+ENV WWWUSER             "${wwwuser}"
 ENV CONTAINERNAME       "nginx"
 RUN apk add nginx
 ADD default.conf /etc/nginx/conf.d/default.conf
