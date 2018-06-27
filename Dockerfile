@@ -32,7 +32,6 @@ RUN chown -R $WWWUSER /run/nginx /etc/nginx
 RUN chgrp -R 0 /run/nginx /etc/nginx /var/tmp/nginx /var/lib/nginx
 RUN chmod -R g=u /run/nginx /etc/nginx /var/tmp/nginx /var/lib/nginx
 RUN rm -r /var/log/nginx
-RUN /cleanup.sh
 USER $WWWUSER
 
 EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
