@@ -7,6 +7,10 @@ optional link to
 [mwaeckerlin/ldap-auth](https://github.com/mwaeckerlin/ldap-auth) for
 LDAP athentication.
 
+ - data related variables
+    - `WEB_ROOT_PATH` sets the path to the web files, defaults to `/var/www`
+
+
 Example
 -------
 
