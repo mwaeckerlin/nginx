@@ -7,7 +7,7 @@ ARG wwwuser="nginx"
 # nginx
 ENV WEB_ROOT_PATH       /var/lib/nginx/html
 ENV WEB_ROOT            /
-ENV MAX_BODY_SIZE       10M
+ENV MAX_BODY_SIZE       0
 ENV AUTOINDEX           off
 ENV ERROR_PAGE          ""
 ENV LOCATION_ROOT_RULES ""

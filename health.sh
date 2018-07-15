@@ -1,3 +1,3 @@
 #!/bin/sh
 
-wget -qO- http://localhost | grep -q '<html'
+wget -qO- http://localhost:8080 | grep -q '<html'
