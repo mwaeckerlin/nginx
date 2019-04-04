@@ -26,7 +26,7 @@ ENV WWWUSER             "${wwwuser}"
 ENV CONTAINERNAME       "nginx"
 ADD default.conf /etc/nginx/conf.d/default.conf
 ADD config-nginx.sh /config-nginx.sh
-RUN apk add nginx && \
+RUN ${APKI} nginx && \
     echo "daemon off;" >> /etc/nginx/nginx.conf && \
     sed -i '/error_log/d' /etc/nginx/nginx.conf && \
     echo "error_log stderr notice;" >> /etc/nginx/nginx.conf && \
