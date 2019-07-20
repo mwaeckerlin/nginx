@@ -15,7 +15,7 @@ Configuration
 
 Configuration is done with the following environment variables:
 
- - `WEB_ROOT_PATH`: Sets the path to the web files, defaults to `/var/lib/nginx/html`.
+ - `WEB_ROOT_PATH`: Sets the path to the web files, defaults to `/app`.
  
  - `WEB_ROOT`: Path in the url, e.g. to access nginx on http://localhost:8080/mypath, set `-e ENV_WEB_ROOT=/mypath`. Defaults to `/`.
  
@@ -65,7 +65,7 @@ Got to http://localhost:8005. Cleans up when you press `Ctrl+C`.
 
     docker run -it --rm --name myservice -p 8005:8080 \
                -e AUTOINDEX=on \
-               -v ${HOME}:/var/lib/nginx/html:ro \
+               -v ${HOME}:/app:ro \
                mwaeckerlin/nginx
 
 Got to http://localhost:8005. Shows your home directory. Cleans up when you press `Ctrl+C`.
