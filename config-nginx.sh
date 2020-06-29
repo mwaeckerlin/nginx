@@ -38,7 +38,6 @@ sed -i 's,\${HTTP_PORT},'"${HTTP_PORT}"',g;
 ' /etc/nginx/conf.d/default.conf
 if ! grep -q autoindex /etc/nginx/conf.d/default.conf; then
     sed -i '/autoindex/d;
-            s,^\([ \t]*root[ \t]*\).*$,\1'${ENV_WEB_ROOT_PATH:-$WEB_ROOT_PATH}';,;
             /^[ \t]*root.*/a\
   autoindex '${AUTOINDEX}'\;\
   '"${ERROR_PAGE}"'
