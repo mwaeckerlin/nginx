@@ -2,9 +2,9 @@
 
 Simple nginx webserver in less than 6MB. High secure: No shell, no backdoor, just nginx.
 
-If you need PHP, use [https://github.com/mwaeckerlin/php-fpm].
+If you need PHP, use [mwaeckerlin/php-fpm].
 
-Info: LDAP has been removed and will be implemented lated reperately in [https://github.com/mwaeckerlin/ldap-auth].
+Info: LDAP has been removed and will be implemented lated reperately in [mwaeckerlin/ldap-auth].
 
 ## Port
 
