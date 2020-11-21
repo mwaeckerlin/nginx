@@ -1,6 +1,8 @@
-# NGINX Webserver
+# NGINX Webserver Docker Image
 
-Simple nginx webserver. If you need PHP, use [waeckerlin/php-fpm].
+Simple nginx webserver in less than 6MB. High secure: No shell, no backdoor, just nginx.
+
+If you need PHP, use [waeckerlin/php-fpm].
 
 Info: LDAP has been removed and will be implemented lated reperately in [mwaeckerlin/ldap-auth].
 
