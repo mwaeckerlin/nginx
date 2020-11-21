@@ -1,45 +1,22 @@
-FROM mwaeckerlin/base
-MAINTAINER mwaeckerlin
-ARG wwwuser="nginx"
+FROM mwaeckerlin/very-base as nginx
+RUN $PKG_INSTALL nginx
+COPY default.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY error /etc/nginx/error
+RUN rm -rf /var/lib/nginx/html
+RUN mkdir /run/nginx
+RUN $ALLOW_USER /var/lib/nginx /run/nginx /var/log/nginx
+RUN tar cph \
+    /etc/nginx /usr/lib/nginx/modules /var/lib/nginx /run/nginx  \
+    $(which nginx) \
+    $(for f in $(which nginx) /usr/lib/nginx/modules/*; do \
+    ldd $f | sed -n 's,.* => \([^ ]*\) .*,\1,p'; \
+    done 2> /dev/null) 2> /dev/null \
+    | tar xpC /root/
 
-## configuration variables
-
-# nginx
-ENV WEB_ROOT_PATH       /app
-ENV WEB_ROOT            /
-ENV MAX_BODY_SIZE       0
-ENV AUTOINDEX           off
-ENV ERROR_PAGE          ""
-ENV LOCATION_ROOT_RULES ""
-
-# ldap - untested
-ENV LDAP_HOST           ""
-ENV LDAP_BASE_DN        ""
-ENV LDAP_BIND_DN        ""
-ENV LDAP_BIND_PASS      ""
-ENV LDAP_REALM          "Restricted"
-
-
-## compile time variables
-ENV HTTP_PORT           8080
-ENV WWWUSER             "${wwwuser}"
-ENV CONTAINERNAME       "nginx"
-ADD default.conf /etc/nginx/conf.d/default.conf
-ADD config-nginx.sh /config-nginx.sh
-ADD error /etc/nginx/error
-RUN ${PKG_INSTALL} nginx \
-    && echo "daemon off;" >> /etc/nginx/nginx.conf \
-    && sed -i '/error_log/d' /etc/nginx/nginx.conf \
-    && echo "error_log stderr notice;" >> /etc/nginx/nginx.conf \
-    && sed -i 's,access_log .*,access_log /dev/stdout combined;,' /etc/nginx/nginx.conf \
-    && touch /var/lib/nginx/logs/error.log \
-    && mkdir -p /usr/share/nginx \
-    && mkdir /run/nginx \
-    && chown -R $WWWUSER /run/nginx /etc/nginx \
-    && chgrp -R 0 /run/nginx /etc/nginx /var/lib/nginx \
-    && chmod -R g=u /run/nginx /etc/nginx /var/lib/nginx \
-    && rm -r /var/log/nginx \
-    && mv /var/lib/nginx/html /app
-USER $WWWUSER
-
-EXPOSE ${HTTP_PORT}
+FROM mwaeckerlin/scratch
+ENV CONTAINERNAME "nginx"
+EXPOSE 8080
+COPY --from=nginx /root/ /
+COPY index.html /app/
+CMD ["/usr/sbin/nginx"]
