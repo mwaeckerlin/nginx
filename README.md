@@ -1,6 +1,6 @@
 # NGINX Webserver Docker Image
 
-[mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell, no backdoor, just nginx.
+[mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell means less risks for backdoors, just nginx running as unpriviledged user.
 
 If you need PHP, use [mwaeckerlin/php-fpm].
 
