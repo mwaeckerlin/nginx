@@ -1,6 +1,6 @@
 # NGINX Webserver Docker Image
 
-Simple nginx webserver in less than 6MB. High secure: No shell, no backdoor, just nginx.
+[mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell, no backdoor, just nginx.
 
 If you need PHP, use [mwaeckerlin/php-fpm].
 
@@ -21,5 +21,6 @@ Exposes nginx on port `8080`.
 
 Got to http://localhost:8005. Cleans up when you press `Ctrl+C`.
 
+[mwaeckerlin/nginx]: https://hub.docker.com/r/mwaeckerlin/nginx "get the image from docker hub"
 [mwaeckerlin/php-fpm]: https://hub.docker.com/r/mwaeckerlin/php-fpm "get the image from docker hub"
 [mwaeckerlin/ldap-auth]: https://hub.docker.com/r/mwaeckerlin/ldap-auth "get the image from docker hub"
