@@ -24,4 +24,5 @@ ENV CONTAINERNAME "nginx"
 EXPOSE 8080
 COPY --from=nginx /root/ /
 COPY index.html /app/
+WORKDIR /app
 CMD ["/usr/sbin/nginx"]
