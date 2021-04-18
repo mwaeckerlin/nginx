@@ -4,7 +4,7 @@
 
 If you need PHP, use [mwaeckerlin/php-fpm].
 
-Info: LDAP has been removed and will be implemented lated reperately in [mwaeckerlin/ldap-auth].
+Info: LDAP has been removed and will be implemented later in [mwaeckerlin/ldap-auth].
 
 ## Port
 
@@ -15,11 +15,20 @@ Exposes nginx on port `8080`.
 - serves from `/app`
 - add additional configuration directly to `/etc/nginx`
 
-### Simple Example With Default Page
+### Docker Compose Sample with Mounted App Path
+
+See `docker-compose.yml` for an example:
+
+- `docker-compose build`
+- `docker-compose up`
+- browse to: `http://localhost:8080`
+- stop with `Ctrl+C`
+
+### Command Line Example With Default Page
 
     docker run -it --rm --name myservice -p 8005:8080 mwaeckerlin/nginx
 
-Got to http://localhost:8005. Cleans up when you press `Ctrl+C`.
+Browse to http://localhost:8005. Cleans up when you press `Ctrl+C`.
 
 [mwaeckerlin/nginx]: https://hub.docker.com/r/mwaeckerlin/nginx "get the image from docker hub"
 [mwaeckerlin/php-fpm]: https://hub.docker.com/r/mwaeckerlin/php-fpm "get the image from docker hub"

@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+  nginx:
+    image: mwaeckerlin/nginx
+    ports:
+      - 8080:8080
+    build: .
+    volumes:
+      - type: bind
+        source: ./app
+        target: /app
