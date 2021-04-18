@@ -2,7 +2,7 @@
 
 [mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell means less risks for backdoors, just nginx running as unprivileged user.
 
-If you need PHP, use [mwaeckerlin/php-fpm].
+If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to port `9000` of host `php-fpm`, if that host is available.
 
 Info: LDAP has been removed and will be implemented later in [mwaeckerlin/ldap-auth].
 
