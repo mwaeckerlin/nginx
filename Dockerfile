@@ -5,7 +5,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY ssl.conf /etc/nginx/conf.d/ssl.conf
 COPY error /etc/nginx/error
 RUN rm -rf /var/lib/nginx/html
-RUN mkdir /run/nginx
 RUN $ALLOW_USER /var/lib/nginx /run/nginx /var/log/nginx
 RUN tar cp \
     /etc/nginx /usr/lib/nginx/modules /var/lib/nginx \
