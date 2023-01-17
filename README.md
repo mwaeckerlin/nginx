@@ -6,6 +6,8 @@ If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to port
 
 Info: LDAP has been removed and will be implemented later in [mwaeckerlin/ldap-auth].
 
+Image size: 5.78MB
+
 ## Port
 
 Exposes nginx on port `8080`.
