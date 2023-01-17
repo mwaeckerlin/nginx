@@ -6,7 +6,7 @@ If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to port
 
 Info: LDAP has been removed and will be implemented later in [mwaeckerlin/ldap-auth].
 
-Image size: 5.78MB
+Image size: ca. 7.17MB (depends on parent image sizes and changes)
 
 ## Port
 
