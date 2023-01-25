@@ -6,6 +6,9 @@ RUN rm -rf /var/lib/nginx/html
 RUN $ALLOW_USER /var/lib/nginx /run/nginx /var/log/nginx
 COPY app /app
 COPY conf /etc/nginx
+USER $RUN_USER
+RUN nginx -t
+USER root
 # create /root with only the nginx executable, modules, dependencies and configurations:
 RUN tar cph \
     /app /etc/nginx /usr/lib/nginx/modules /var/lib/nginx \
