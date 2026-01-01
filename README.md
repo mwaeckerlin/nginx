@@ -1,6 +1,6 @@
 # NGINX Webserver Docker Image
 
-[mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell means less risks for backdoors, just nginx running as unprivileged user.
+[mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell means less risk for backdoors, just nginx running as unprivileged user.
 
 If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to the FastCGI backend defined by env `PHP_FPM_HOST` and `PHP_FPM_PORT` (defaults: `php-fpm:9000`).
 
@@ -16,7 +16,7 @@ Exposes nginx on port `8080`.
 
 - serves from `/app`
 - FastCGI backend via env: `PHP_FPM_HOST` (default `php-fpm`), `PHP_FPM_PORT` (default `9000`)
-- add additional configuration directly to `/etc/nginx`
+- add additional configuration directly to `/etc/nginx.template` (environment variables allowed in the form of ${VARIABLE_NAME}, but they must be defined)
 - should you need ssl, create `/etc/nginx/dhparam.pem`, see example in [mwaeckerlin/reverse-proxy]
 
 ### Docker Compose Sample with Mounted App Path

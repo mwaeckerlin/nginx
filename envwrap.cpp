@@ -26,6 +26,8 @@ E.g.
 #include <unordered_map>
 #include <vector>
 
+extern char **environ;
+
 namespace fs = std::filesystem;
 
 static std::string
@@ -89,47 +91,21 @@ copy_with_subst(const fs::path &src_root, const fs::path &dst_root,
 }
 
 int main(int argc, char *argv[]) try {
-  std::unordered_map<std::string, std::string> envs;
-  std::vector<std::string> args(argv + 1, argv + argc);
-  std::vector<std::string> cmd;
-  fs::path tmpl_root;
-  fs::path dst_root;
+  if (argc < 4)
+    throw std::runtime_error("usage: envwrap <in> <out> <cmd> [args...]");
 
-  for (auto it = args.begin(); it != args.end(); ++it) {
-    if (*it == "--from") {
-      auto next = std::next(it);
-      if (next == args.end())
-        throw std::runtime_error("missing path after --from");
-      tmpl_root = *next;
-      it = next;
-      continue;
-    }
-    if (*it == "--to") {
-      auto next = std::next(it);
-      if (next == args.end())
-        throw std::runtime_error("missing path after --to");
-      dst_root = *next;
-      it = next;
-      continue;
-    }
-    if (*it == "--substitute-env") {
-      auto next = std::next(it);
-      if (next == args.end())
-        throw std::runtime_error("missing env name after --substitute-env");
-      const std::string &name = *next;
-      const char *val = std::getenv(name.c_str());
-      envs[name] = val ? std::string(val) : std::string();
-      it = next;
-      continue;
-    }
-    cmd.emplace_back(*it);
+  fs::path tmpl_root{argv[1]};
+  fs::path dst_root{argv[2]};
+  std::vector<std::string> cmd;
+  for (int i = 3; i < argc; ++i) cmd.emplace_back(argv[i]);
+
+  std::unordered_map<std::string, std::string> envs;
+  for (char **p = environ; *p; ++p) {
+    std::string line(*p);
+    auto pos = line.find('=');
+    if (pos == std::string::npos) continue;
+    envs[line.substr(0, pos)] = line.substr(pos + 1);
   }
-  if (cmd.empty())
-    throw std::runtime_error("no command provided, add a command to execute after substitution");
-  if (tmpl_root.empty())
-    throw std::runtime_error("no input provided, add --in <infile>|<indir>");
-  if (dst_root.empty())
-    throw std::runtime_error("no output provided, add --out <outfile>|<outdir>");
 
   copy_with_subst(tmpl_root, dst_root, envs);
 
@@ -147,9 +123,6 @@ int main(int argc, char *argv[]) try {
   }
   std::cerr << std::endl;
   std::perror("execvp");
-  return 1;
-} catch (const std::string &s) {
-  std::cerr << "ERROR: " << s << std::endl;
   return 1;
 } catch (const std::exception &e) {
   std::cerr << "EXCEPTION: " << e.what() << std::endl;
