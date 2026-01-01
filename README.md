@@ -1,12 +1,16 @@
-# NGINX Webserver Docker Image
+# Minimalistic Secure NGINX Webserver Docker Image
 
-[mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell means less risk for backdoors, just nginx running as unprivileged user.
+[mwaeckerlin/nginx] is a simple nginx webserver in less than 10MB. High secure: No shell means less risk for backdoors, just nginx running as unprivileged user.
 
 If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to the FastCGI backend defined by env `PHP_FPM_HOST` and `PHP_FPM_PORT` (defaults: `php-fpm:9000`).
 
-Info: LDAP has been removed and will be implemented later in [mwaeckerlin/ldap-auth].
+Image size: ca. 9.87MB (depends on parent image sizes and changes)
 
-Image size: ca. 7.17MB (depends on parent image sizes and changes)
+This is the most lean and secure image for PHP servers:
+ - extremely small size, minimalistic dependencies
+ - no shell, only the server command
+ - small attack surface
+ - starts as non root user
 
 ## Port
 
