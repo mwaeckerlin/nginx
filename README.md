@@ -6,7 +6,7 @@ If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to the 
 
 Image size: ca. 9.87MB (depends on parent image sizes and changes)
 
-This is the most lean and secure image for PHP servers:
+This is the most lean and secure image for NGINX servers:
  - extremely small size, minimalistic dependencies
  - no shell, only the server command
  - small attack surface
