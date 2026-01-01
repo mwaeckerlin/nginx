@@ -2,7 +2,7 @@
 
 [mwaeckerlin/nginx] is a simple nginx webserver in less than 6MB. High secure: No shell means less risks for backdoors, just nginx running as unprivileged user.
 
-If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to port `9000` of host `php-fpm`, if that host is available.
+If you need PHP, use [mwaeckerlin/php-fpm]. The image forwards php files to the FastCGI backend defined by env `PHP_FPM_HOST` and `PHP_FPM_PORT` (defaults: `php-fpm:9000`).
 
 Info: LDAP has been removed and will be implemented later in [mwaeckerlin/ldap-auth].
 
@@ -15,6 +15,7 @@ Exposes nginx on port `8080`.
 ## Configuration
 
 - serves from `/app`
+- FastCGI backend via env: `PHP_FPM_HOST` (default `php-fpm`), `PHP_FPM_PORT` (default `9000`)
 - add additional configuration directly to `/etc/nginx`
 - should you need ssl, create `/etc/nginx/dhparam.pem`, see example in [mwaeckerlin/reverse-proxy]
 
