@@ -12,6 +12,7 @@ RUN mkdir /etc/nginx
 RUN $ALLOW_USER /var/lib/nginx /run/nginx /var/log/nginx /etc/nginx
 ENV PHP_FPM_HOST "php-fpm"
 ENV PHP_FPM_PORT "9000"
+ENV ROOT "/app"
 COPY --from=envwrap envwrap /usr/bin/envwrap
 COPY app /app
 COPY conf /etc/nginx.template
@@ -32,6 +33,7 @@ FROM mwaeckerlin/scratch
 ENV CONTAINERNAME "nginx"
 ENV PHP_FPM_HOST "php-fpm"
 ENV PHP_FPM_PORT "9000"
+ENV ROOT "/app"
 EXPOSE 8080
 WORKDIR /app
 CMD ["/usr/bin/envwrap", "/etc/nginx.template", "/etc/nginx", "/usr/sbin/nginx"]
