@@ -27,10 +27,10 @@ Exposes nginx on port `8080`.
 
 See `docker-compose.yml` for an example:
 
-- `docker-compose build`
-- `docker-compose up`
+- `npm run build`
+- `npm start` (foreground) or `npm run start:daemon` (background)
 - browse to: `http://localhost:8080`
-- stop with `Ctrl+C`
+- stop with `Ctrl+C` (or `npm stop` for daemon mode)
 
 ### Command Line Example With Default Page
 
