@@ -1,0 +1,61 @@
+# E2E stack: one nginx service per supported usage, all built from the same
+# image without any extra configuration, plus a pytest test-runner.
+#   static -> plain local file serving
+#   spa    -> single page app / PWA (client side routing)
+#   php    -> PHP front controller via php-fpm
+#   lang   -> *.XX.* language variant selection
+x-nginx: &nginx
+  image: mwaeckerlin/nginx
+  build:
+    context: ../..
+  environment:
+    ROOT: /app
+
+services:
+
+  static:
+    <<: *nginx
+    volumes:
+      - ./apps/static:/app:ro
+
+  spa:
+    <<: *nginx
+    volumes:
+      - ./apps/spa:/app:ro
+
+  php:
+    <<: *nginx
+    environment:
+      ROOT: /app
+      PHP_FPM_HOST: php-fpm
+      PHP_FPM_PORT: "9000"
+    volumes:
+      - ./apps/php:/app:ro
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    image: php:8-fpm-alpine
+    working_dir: /app
+    volumes:
+      - ./apps/php:/app:ro
+
+  lang:
+    <<: *nginx
+    volumes:
+      - ./apps/lang:/app:ro
+
+  test-runner:
+    build:
+      context: .
+    depends_on:
+      - static
+      - spa
+      - php
+      - lang
+    environment:
+      STATIC_URL: http://static:8080
+      SPA_URL:    http://spa:8080
+      PHP_URL:    http://php:8080
+      LANG_URL:   http://lang:8080
+    command: ["pytest", "-v", "--tb=short"]

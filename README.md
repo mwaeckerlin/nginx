@@ -12,6 +12,22 @@ This is the most lean and secure image for NGINX servers:
  - small attack surface
  - starts as non root user
 
+## Universal usage without extra configuration
+
+The same image serves all of the following out of the box, just by copying your
+files to `/app` — the presence of the files decides the behaviour:
+
+- **Static files** — plain delivery of whatever lies in `/app`.
+- **SPA / PWA** — for client side routed apps (React, Vue, …) an unknown route
+  falls back to the app shell `index.html`, so deep links and reloads work.
+  Missing assets (`*.js`, `*.css`, images, …) return `404` instead of the shell.
+- **PHP** — if there is no `index.html`, unknown routes fall through to the
+  `index.php` front controller via [mwaeckerlin/php-fpm] (FastCGI backend from
+  env `PHP_FPM_HOST`/`PHP_FPM_PORT`).
+- **Language variants** — files named `*.XX.*` (`index.de.html`, `page.fr.html`,
+  …) are picked automatically from the request's `Accept-Language`; any
+  two letter code works, with a graceful fallback to the language neutral file.
+
 ## Port
 
 Exposes nginx on port `8080`.
@@ -37,6 +53,14 @@ See `docker-compose.yml` for an example:
     docker run -it --rm --name myservice -p 8005:8080 mwaeckerlin/nginx
 
 Browse to http://localhost:8005. Cleans up when you press `Ctrl+C`.
+
+## Tests
+
+`npm test` runs the docker-compose based end to end suite under `tests/e2e/`,
+spinning up one nginx service per usage (static, SPA/PWA, PHP, language) and
+verifying each with pytest:
+
+    npm test            # full e2e suite (tests/run-e2e.sh)
 
 [mwaeckerlin/nginx]: https://hub.docker.com/r/mwaeckerlin/nginx "get the image from docker hub"
 [mwaeckerlin/php-fpm]: https://hub.docker.com/r/mwaeckerlin/php-fpm "get the image from docker hub"
