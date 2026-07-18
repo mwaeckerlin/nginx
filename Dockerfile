@@ -10,9 +10,9 @@ RUN rm -rf /var/lib/nginx/html
 RUN mv /etc/nginx /etc/nginx.template
 RUN mkdir /etc/nginx
 RUN $ALLOW_USER /var/lib/nginx /run/nginx /var/log/nginx /etc/nginx
-ENV PHP_FPM_HOST "php-fpm"
-ENV PHP_FPM_PORT "9000"
-ENV ROOT "/app"
+ENV PHP_FPM_HOST="php-fpm"
+ENV PHP_FPM_PORT="9000"
+ENV ROOT="/app"
 COPY --from=envwrap envwrap /usr/bin/envwrap
 COPY app /app
 COPY conf /etc/nginx.template
@@ -30,10 +30,10 @@ RUN tar cph \
 #### build the final image ####
 # the final image has no shell and nothing that is not required
 FROM mwaeckerlin/scratch
-ENV CONTAINERNAME "nginx"
-ENV PHP_FPM_HOST "php-fpm"
-ENV PHP_FPM_PORT "9000"
-ENV ROOT "/app"
+ENV CONTAINERNAME="nginx"
+ENV PHP_FPM_HOST="php-fpm"
+ENV PHP_FPM_PORT="9000"
+ENV ROOT="/app"
 EXPOSE 8080
 WORKDIR /app
 CMD ["/usr/bin/envwrap", "/etc/nginx.template", "/etc/nginx", "/usr/sbin/nginx"]

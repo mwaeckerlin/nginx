@@ -12,6 +12,8 @@ This is the most lean and secure image for NGINX servers:
  - small attack surface
  - starts as non root user
 
+**Role: production runtime image** — run it directly or use it as the **final stage** of a multi-stage build (copy your files into `/app`). It is a runtime image, never a build image; it is built via the build-only [mwaeckerlin/very-base] and ships on the runtime base [mwaeckerlin/scratch].
+
 ## Universal usage without extra configuration
 
 The same image serves all of the following out of the box, just by copying your
@@ -39,9 +41,9 @@ Exposes nginx on port `8080`.
 - add additional configuration directly to `/etc/nginx.template` (environment variables allowed in the form of ${VARIABLE_NAME}, but they must be defined)
 - should you need ssl, create `/etc/nginx/dhparam.pem`, see example in [mwaeckerlin/reverse-proxy]
 
-### Docker Compose Sample with Mounted App Path
+### Docker Compose Sample
 
-See `docker-compose.yml` for an example:
+See `docker-compose.yml` for an example serving the built-in default page:
 
 - `npm run build`
 - `npm start` (foreground) or `npm run start:daemon` (background)
@@ -65,3 +67,5 @@ verifying each with pytest:
 [mwaeckerlin/nginx]: https://hub.docker.com/r/mwaeckerlin/nginx "get the image from docker hub"
 [mwaeckerlin/php-fpm]: https://hub.docker.com/r/mwaeckerlin/php-fpm "get the image from docker hub"
 [mwaeckerlin/reverse-proxy]: https://github.com/mwaeckerlin/reverse-proxy "see definition at git hub"
+[mwaeckerlin/very-base]: https://github.com/mwaeckerlin/very-base "build-only base image, never for production"
+[mwaeckerlin/scratch]: https://github.com/mwaeckerlin/scratch "minimalistic runtime base image"
