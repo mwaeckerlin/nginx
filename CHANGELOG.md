@@ -1,5 +1,11 @@
 # Changelog
 
+- 2026-07-27 **1.3.1**
+    - PHP forwarding is optional again: the image starts and serves even when no PHP backend exists in the stack — since the environment-variable rework of January it aborted at startup with "host not found", which broke deployments of purely static sites
+        - a PHP request without a backend now answers "not found"; a configured but unreachable backend shows the maintenance page instead of taking the server down
+    - The test suite now runs entirely without PHP and pins exactly this: startup without a backend, "not found" for PHP requests, localized error pages and configuration through environment variables — the PHP combination tests moved to the php-fpm project, which tests both images together
+    - Feature and test registers added (FEATURES.md, TESTS.md) with an automatic guard: every feature must have a test, and no test may be skipped
+
 - 2026-07-17 **1.3.0**
     - Security headers consolidated and automatically tested: the complete set now lives in one place — previously, centrally defined headers (e.g. the clickjacking protection) were silently lost because of nginx's all-or-nothing header inheritance
         - clickjacking protection (embedding only from the site itself) is now effective for the first time

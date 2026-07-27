@@ -1,4 +1,9 @@
-"""Shared fixtures: base URLs of the per-usage nginx services + readiness wait."""
+"""Shared fixtures: base URLs of the per-usage nginx services + readiness wait.
+
+The whole stack intentionally runs WITHOUT any php-fpm service: the readiness
+wait therefore already pins the invariant that the image starts and serves
+even when the default FastCGI backend hostname does not resolve.
+"""
 import os
 import time
 
@@ -8,10 +13,12 @@ import requests
 
 # ----------------------------------------------------------------- Config ---
 
-STATIC_URL = os.environ.get("STATIC_URL", "http://static:8080")
-SPA_URL    = os.environ.get("SPA_URL",    "http://spa:8080")
-PHP_URL    = os.environ.get("PHP_URL",    "http://php:8080")
-LANG_URL   = os.environ.get("LANG_URL",   "http://lang:8080")
+STATIC_URL  = os.environ.get("STATIC_URL",  "http://static:8080")
+SPA_URL     = os.environ.get("SPA_URL",     "http://spa:8080")
+LANG_URL    = os.environ.get("LANG_URL",    "http://lang:8080")
+BARE_URL    = os.environ.get("BARE_URL",    "http://bare:8080")
+DEADPHP_URL = os.environ.get("DEADPHP_URL", "http://deadphp:8080")
+ROOTED_URL  = os.environ.get("ROOTED_URL",  "http://rooted:8080")
 
 
 # ----------------------------------------------------------- Helpers -------
@@ -38,5 +45,6 @@ def get(url: str, path: str, **kwargs) -> requests.Response:
 
 @pytest.fixture(scope="session", autouse=True)
 def wait_for_services():
-    for url in (STATIC_URL, SPA_URL, PHP_URL, LANG_URL):
+    for url in (STATIC_URL, SPA_URL, LANG_URL, BARE_URL, DEADPHP_URL,
+                ROOTED_URL):
         wait_for_http(url + "/")

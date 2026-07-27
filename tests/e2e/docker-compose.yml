@@ -1,15 +1,24 @@
 # E2E stack: one nginx service per supported usage, all built from the same
 # image without any extra configuration, plus a pytest test-runner.
-#   static -> plain local file serving
-#   spa    -> single page app / PWA (client side routing)
-#   php    -> PHP front controller via php-fpm
-#   lang   -> *.XX.* language variant selection
+#   static  -> plain local file serving
+#   spa     -> single page app / PWA (client side routing)
+#   lang    -> *.XX.* language variant selection
+#   bare    -> no index.html, no index.php: unknown routes must answer 404
+#   deadphp -> PHP file exists, backend port closed: must answer 502 page
+#   rooted  -> ROOT env override: serves from a subdirectory of the volume
+#
+# INVARIANT: this stack contains NO php-fpm service, so the default FastCGI
+# backend hostname is not resolvable. Every service must still start and
+# serve — PHP forwarding is optional and only used when a PHP file exists.
+# The nginx+php-fpm combination is tested in the php-fpm project instead.
+# distinct project name: both this and the php-fpm e2e stack live in a
+# directory called e2e — without an explicit name they would collide
+name: nginx-e2e
+
 x-nginx: &nginx
   image: mwaeckerlin/nginx
   build:
     context: ../..
-  environment:
-    ROOT: /app
 
 services:
 
@@ -23,27 +32,32 @@ services:
     volumes:
       - ./apps/spa:/app:ro
 
-  php:
-    <<: *nginx
-    environment:
-      ROOT: /app
-      PHP_FPM_HOST: php-fpm
-      PHP_FPM_PORT: "9000"
-    volumes:
-      - ./apps/php:/app:ro
-    depends_on:
-      - php-fpm
-
-  php-fpm:
-    image: php:8-fpm-alpine
-    working_dir: /app
-    volumes:
-      - ./apps/php:/app:ro
-
   lang:
     <<: *nginx
     volumes:
       - ./apps/lang:/app:ro
+
+  bare:
+    <<: *nginx
+    volumes:
+      - ./apps/bare:/app:ro
+
+  # backend host resolves (the static service) but its port 9000 is closed:
+  # a PHP request must yield the 502 maintenance page, never kill the server
+  deadphp:
+    <<: *nginx
+    environment:
+      PHP_FPM_HOST: static
+    volumes:
+      - ./apps/deadphp:/app:ro
+
+  # ROOT override pins the environment variable substitution at startup
+  rooted:
+    <<: *nginx
+    environment:
+      ROOT: /app/sub
+    volumes:
+      - ./apps/static:/app:ro
 
   test-runner:
     build:
@@ -51,11 +65,15 @@ services:
     depends_on:
       - static
       - spa
-      - php
       - lang
+      - bare
+      - deadphp
+      - rooted
     environment:
-      STATIC_URL: http://static:8080
-      SPA_URL:    http://spa:8080
-      PHP_URL:    http://php:8080
-      LANG_URL:   http://lang:8080
+      STATIC_URL:  http://static:8080
+      SPA_URL:     http://spa:8080
+      LANG_URL:    http://lang:8080
+      BARE_URL:    http://bare:8080
+      DEADPHP_URL: http://deadphp:8080
+      ROOTED_URL:  http://rooted:8080
     command: ["pytest", "-v", "--tb=short"]
