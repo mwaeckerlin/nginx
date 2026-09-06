@@ -6,6 +6,9 @@
 #   bare    -> no index.html, no index.php: unknown routes must answer 404
 #   deadphp -> PHP file exists, backend port closed: must answer 502 page
 #   rooted  -> ROOT env override: serves from a subdirectory of the volume
+#   fallback-yes / fallback-no
+#           -> SPA_FALLBACK setting: same files, unknown path answers the
+#              start page in one and 404 in the other
 #
 # INVARIANT: this stack contains NO php-fpm service, so the default FastCGI
 # backend hostname is not resolvable. Every service must still start and
@@ -51,6 +54,24 @@ services:
     volumes:
       - ./apps/deadphp:/app:ro
 
+  # SPA_FALLBACK=yes (explicit): an unknown path serves the app shell,
+  # exactly like the default service above
+  fallback-yes:
+    <<: *nginx
+    environment:
+      SPA_FALLBACK: "yes"
+    volumes:
+      - ./apps/static:/app:ro
+
+  # SPA_FALLBACK=no: the same files, but an unknown path must answer 404 —
+  # the setting for a static website
+  fallback-no:
+    <<: *nginx
+    environment:
+      SPA_FALLBACK: "no"
+    volumes:
+      - ./apps/static:/app:ro
+
   # ROOT override pins the environment variable substitution at startup
   rooted:
     <<: *nginx
@@ -68,12 +89,16 @@ services:
       - lang
       - bare
       - deadphp
+      - fallback-yes
+      - fallback-no
       - rooted
     environment:
-      STATIC_URL:  http://static:8080
-      SPA_URL:     http://spa:8080
-      LANG_URL:    http://lang:8080
-      BARE_URL:    http://bare:8080
-      DEADPHP_URL: http://deadphp:8080
-      ROOTED_URL:  http://rooted:8080
+      STATIC_URL:       http://static:8080
+      SPA_URL:          http://spa:8080
+      LANG_URL:         http://lang:8080
+      BARE_URL:         http://bare:8080
+      DEADPHP_URL:      http://deadphp:8080
+      FALLBACK_YES_URL: http://fallback-yes:8080
+      FALLBACK_NO_URL:  http://fallback-no:8080
+      ROOTED_URL:       http://rooted:8080
     command: ["pytest", "-v", "--tb=short"]

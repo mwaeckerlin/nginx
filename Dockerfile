@@ -13,6 +13,10 @@ RUN $ALLOW_USER /var/lib/nginx /run/nginx /var/log/nginx /etc/nginx
 ENV PHP_FPM_HOST="php-fpm"
 ENV PHP_FPM_PORT="9000"
 ENV ROOT="/app"
+# yes: an unknown path answers with the app shell (single page application),
+# no: an unknown path answers 404 (static website); default keeps the
+# behaviour of all earlier versions
+ENV SPA_FALLBACK="yes"
 COPY --from=envwrap envwrap /usr/bin/envwrap
 COPY app /app
 COPY conf /etc/nginx.template
@@ -34,6 +38,7 @@ ENV CONTAINERNAME="nginx"
 ENV PHP_FPM_HOST="php-fpm"
 ENV PHP_FPM_PORT="9000"
 ENV ROOT="/app"
+ENV SPA_FALLBACK="yes"
 EXPOSE 8080
 WORKDIR /app
 CMD ["/usr/bin/envwrap", "/etc/nginx.template", "/etc/nginx", "/usr/sbin/nginx"]

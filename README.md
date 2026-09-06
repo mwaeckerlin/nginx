@@ -21,7 +21,9 @@ This is the most lean and secure image for NGINX servers:
 The same image serves all of the following out of the box, just by copying your
 files to `/app` — the presence of the files decides the behaviour:
 
-- **Static files** — plain delivery of whatever lies in `/app`.
+- **Static files** — plain delivery of whatever lies in `/app`. With
+  `SPA_FALLBACK=no` an unknown address answers `404` instead of the start
+  page, which is what a static website needs (see [Configuration](#configuration)).
 - **SPA / PWA** — for client side routed apps (React, Vue, …) an unknown route
   falls back to the app shell `index.html`, so deep links and reloads work.
   Missing assets (`*.js`, `*.css`, images, …) return `404` instead of the shell.
@@ -40,9 +42,21 @@ Exposes nginx on port `8080`.
 ## Configuration
 
 - serves from `/app`
+- answer for an address that matches no file via env: `SPA_FALLBACK` (default `yes`), see below
 - FastCGI backend via env: `PHP_FPM_HOST` (default `php-fpm`), `PHP_FPM_PORT` (default `9000`)
 - add additional configuration directly to `/etc/nginx.template` (environment variables allowed in the form of ${VARIABLE_NAME}, but they must be defined)
 - should you need ssl, create `/etc/nginx/dhparam.pem`, see example in [mwaeckerlin/reverse-proxy]
+
+### Unknown Paths: Start Page or 404
+
+`SPA_FALLBACK` decides what an address that matches no file answers:
+
+- `SPA_FALLBACK=yes` (default) — the app shell `index.html` is delivered with status 200. **This is the right behaviour for a single page application** (React, Vue, …), where a deep link and a reload of a client side route must reach the app.
+- `SPA_FALLBACK=no` — the request answers `404` with the friendly error page. **This is the right behaviour for a static website**, where a typing error in the address must say "not found": with the fallback a wrong address answers 200 with the start page, and search engines then index every invented address as a valid page.
+
+The default keeps the behaviour of all earlier versions, so an upgrade changes nothing in a running deployment; only the literal value `no` switches the fallback off, every other value keeps it. In both settings existing files, subdirectory indexes, assets and language variants are delivered unchanged, the error pages stay localized, and the PHP front controller stays reachable.
+
+    docker run -it --rm --name mysite -p 8005:8080 -e SPA_FALLBACK=no mwaeckerlin/nginx
 
 ### Docker Compose Sample
 

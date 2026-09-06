@@ -1,5 +1,10 @@
 # Changelog
 
+- 2026-09-06 **1.3.2**
+    - An address that matches no file can now answer "not found" instead of the start page: that is the right behaviour for a static website, where a typing error in the address otherwise answers with the start page and search engines index every invented address as a valid page
+        - the previous behaviour stays the default, so no running installation changes on an update, and a single page application keeps its deep links and reloads
+    - Both settings are measured end to end on the same files: existing address delivered, unknown address the start page in one and the localized "not found" page in the other
+
 - 2026-07-27 **1.3.1**
     - PHP forwarding is optional again: the image starts and serves even when no PHP backend exists in the stack — since the environment-variable rework of January it aborted at startup with "host not found", which broke deployments of purely static sites
         - a PHP request without a backend now answers "not found"; a configured but unreachable backend shows the maintenance page instead of taking the server down

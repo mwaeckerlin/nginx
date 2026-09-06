@@ -13,12 +13,14 @@ import requests
 
 # ----------------------------------------------------------------- Config ---
 
-STATIC_URL  = os.environ.get("STATIC_URL",  "http://static:8080")
-SPA_URL     = os.environ.get("SPA_URL",     "http://spa:8080")
-LANG_URL    = os.environ.get("LANG_URL",    "http://lang:8080")
-BARE_URL    = os.environ.get("BARE_URL",    "http://bare:8080")
-DEADPHP_URL = os.environ.get("DEADPHP_URL", "http://deadphp:8080")
-ROOTED_URL  = os.environ.get("ROOTED_URL",  "http://rooted:8080")
+STATIC_URL       = os.environ.get("STATIC_URL",       "http://static:8080")
+SPA_URL          = os.environ.get("SPA_URL",          "http://spa:8080")
+LANG_URL         = os.environ.get("LANG_URL",         "http://lang:8080")
+BARE_URL         = os.environ.get("BARE_URL",         "http://bare:8080")
+DEADPHP_URL      = os.environ.get("DEADPHP_URL",      "http://deadphp:8080")
+FALLBACK_YES_URL = os.environ.get("FALLBACK_YES_URL", "http://fallback-yes:8080")
+FALLBACK_NO_URL  = os.environ.get("FALLBACK_NO_URL",  "http://fallback-no:8080")
+ROOTED_URL       = os.environ.get("ROOTED_URL",       "http://rooted:8080")
 
 
 # ----------------------------------------------------------- Helpers -------
@@ -46,5 +48,5 @@ def get(url: str, path: str, **kwargs) -> requests.Response:
 @pytest.fixture(scope="session", autouse=True)
 def wait_for_services():
     for url in (STATIC_URL, SPA_URL, LANG_URL, BARE_URL, DEADPHP_URL,
-                ROOTED_URL):
+                FALLBACK_YES_URL, FALLBACK_NO_URL, ROOTED_URL):
         wait_for_http(url + "/")

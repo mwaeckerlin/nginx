@@ -43,3 +43,16 @@ the guard `tests/docs-contract.sh` fails when a feature has no test.
   files can simply be added to the template directory.
 - **F11 — Headless minimal production image.** Around 10 MB, no shell and no
   interpreter to pivot with, runs as an unprivileged user.
+- **F12 — Unknown paths: start page or 404, switchable.** An address that
+  matches no file answers either with the app shell `index.html` (status
+  200) or with the friendly 404 page; `SPA_FALLBACK` decides, default `yes`
+  for the app shell, which is the behaviour of every earlier version, so an
+  upgrade changes nothing in a running deployment. `yes` is right for a
+  single page application, where a deep link and a reload of a client side
+  route must reach the app; `no` is right for a static website, where a
+  mistyped address must answer "not found" instead of 200 with the start
+  page, and search engines must not index invented addresses as valid
+  pages. Only the literal value `no` switches the fallback off; every other
+  value, and an unset variable, keep it. Both settings deliver existing
+  files, subdirectory indexes, assets and language variants unchanged, show
+  the localized error pages, and leave the PHP front controller reachable.

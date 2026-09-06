@@ -45,6 +45,16 @@ image.
 - **F9** `tests/e2e/test_errorpages.py` › test_error_page_404_german — the German 404 variant is selected via `Accept-Language`.
 - **F9** `tests/e2e/test_errorpages.py` › test_unreachable_backend_returns_502_page — the friendly 502 maintenance page is served.
 - **F10** `tests/e2e/test_errorpages.py` › test_root_env_override_served — `ROOT=/app/sub` takes effect at container start.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_known_path_served_with_fallback — `SPA_FALLBACK=yes`: an existing file is delivered.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_unknown_path_serves_start_page_with_fallback — `SPA_FALLBACK=yes`: an unknown path answers 200 with the start page.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_known_path_served_without_fallback — `SPA_FALLBACK=no`: an existing file is delivered.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_root_served_without_fallback — `SPA_FALLBACK=no`: the root still serves the start page.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_subdirectory_index_served_without_fallback — `SPA_FALLBACK=no`: a subdirectory index is still delivered.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_asset_served_without_fallback — `SPA_FALLBACK=no`: an existing asset is still delivered.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_unknown_path_returns_404_without_fallback — `SPA_FALLBACK=no`: an unknown path answers 404 with the error page, never the start page.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_unknown_path_404_page_localized_without_fallback — `SPA_FALLBACK=no`: the 404 page follows `Accept-Language`.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_missing_asset_returns_404_without_fallback — `SPA_FALLBACK=no`: a missing asset answers 404.
+- **F12** `tests/e2e/test_spa_fallback.py` › test_default_keeps_the_fallback — without the variable the image answers as before: unknown path 200 with the start page.
 - **F10** `tests/e2e/test_errorpages.py` › test_unreachable_backend_returns_502_page — `PHP_FPM_HOST` override reaches the FastCGI config.
 
 ## E2E — cross-project (php-fpm project, runs against this image)
