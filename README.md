@@ -27,10 +27,14 @@ files to `/app` — the presence of the files decides the behaviour:
 - **SPA / PWA** — for client side routed apps (React, Vue, …) an unknown route
   falls back to the app shell `index.html`, so deep links and reloads work.
   Missing assets (`*.js`, `*.css`, images, …) return `404` instead of the shell.
-- **PHP** — if there is no `index.html`, unknown routes fall through to the
-  `index.php` front controller via [mwaeckerlin/php-fpm] (FastCGI backend from
-  env `PHP_FPM_HOST`/`PHP_FPM_PORT`). Entirely optional: with no backend in
-  the stack, PHP requests answer `404` and everything else works unchanged.
+- **PHP** — an unknown route goes to the `index.php` front controller via
+  [mwaeckerlin/php-fpm] (FastCGI backend from env `PHP_FPM_HOST`/`PHP_FPM_PORT`)
+  whenever `/app` holds one, so WordPress permalinks and every other routed PHP
+  application work. The front controller decides per address and answers `404`
+  for one it does not know, so it wins over an `index.html` lying beside it —
+  which matters because this image copies its welcome page into `/app` and
+  every derived image inherits it. Entirely optional: with no backend in the
+  stack, PHP requests answer `404` and everything else works unchanged.
 - **Language variants** — files named `*.XX.*` (`index.de.html`, `page.fr.html`,
   …) are picked automatically from the request's `Accept-Language`; any
   two letter code works, with a graceful fallback to the language neutral file.
@@ -51,10 +55,10 @@ Exposes nginx on port `8080`.
 
 `SPA_FALLBACK` decides what an address that matches no file answers:
 
-- `SPA_FALLBACK=yes` (default) — the app shell `index.html` is delivered with status 200. **This is the right behaviour for a single page application** (React, Vue, …), where a deep link and a reload of a client side route must reach the app.
+- `SPA_FALLBACK=yes` (default) — the `index.php` front controller answers where `/app` holds one, otherwise the app shell `index.html` with status 200. **This is the right behaviour for a single page application** (React, Vue, …), where a deep link and a reload of a client side route must reach the app, **and for every routed PHP application** (WordPress permalinks).
 - `SPA_FALLBACK=no` — the request answers `404` with the friendly error page. **This is the right behaviour for a static website**, where a typing error in the address must say "not found": with the fallback a wrong address answers 200 with the start page, and search engines then index every invented address as a valid page.
 
-The default keeps the behaviour of all earlier versions, so an upgrade changes nothing in a running deployment; only the literal value `no` switches the fallback off, every other value keeps it. In both settings existing files, subdirectory indexes, assets and language variants are delivered unchanged, the error pages stay localized, and the PHP front controller stays reachable.
+The default keeps the behaviour of all earlier versions, so an upgrade changes nothing in a running deployment; only the literal value `no` switches the fallback off, every other value keeps it. In both settings existing files, subdirectory indexes, assets and language variants are delivered unchanged and the error pages stay localized. A PHP application keeps the default `yes`: with `no` an unknown address answers `404` before the front controller is asked, so its routed addresses stop working.
 
     docker run -it --rm --name mysite -p 8005:8080 -e SPA_FALLBACK=no mwaeckerlin/nginx
 

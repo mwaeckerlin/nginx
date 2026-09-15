@@ -10,6 +10,9 @@ the guard `tests/docs-contract.sh` fails when a feature has no test.
   page.
 - **F2 — SPA / PWA support.** For client side routed apps an unknown route
   falls back to the app shell `index.html`, so deep links and reloads work.
+  An application that brings an `index.php` is routed by that front
+  controller instead (F5); the shell answers where no front controller
+  exists.
 - **F3 — Missing assets return 404.** A missing asset (`*.js`, `*.css`,
   images, fonts, …) answers 404 and never the app shell or a PHP response,
   so broken builds surface immediately.
@@ -19,10 +22,14 @@ the guard `tests/docs-contract.sh` fails when a feature has no test.
   language neutral file.
 - **F5 — PHP forwarding.** Requests for PHP files are forwarded to the
   FastCGI backend defined by `PHP_FPM_HOST`/`PHP_FPM_PORT` (default
-  `php-fpm:9000`); without an `index.html`, unknown routes fall through to
-  the `index.php` front controller (e.g. WordPress permalinks). Verified
-  end-to-end in the php-fpm project — the nginx suite runs without PHP by
-  design.
+  `php-fpm:9000`). An address that matches no file goes to the `index.php`
+  front controller whenever the application root holds one, so WordPress
+  permalinks and every other routed PHP application work; the front
+  controller decides per address and answers 404 for one it does not know,
+  and an `index.html` lying beside it never takes that decision away. Every
+  image built on this one carries the welcome page `index.html`, so this
+  order is what makes a derived PHP image work at all. Verified end-to-end
+  in the php-fpm project — the nginx suite runs without PHP by design.
 - **F6 — PHP is optional, out of the box.** The image starts and serves even
   when no PHP backend exists in the stack, because the backend hostname is
   only resolved at request time. A PHP request without a backend answers
@@ -54,5 +61,7 @@ the guard `tests/docs-contract.sh` fails when a feature has no test.
   page, and search engines must not index invented addresses as valid
   pages. Only the literal value `no` switches the fallback off; every other
   value, and an unset variable, keep it. Both settings deliver existing
-  files, subdirectory indexes, assets and language variants unchanged, show
-  the localized error pages, and leave the PHP front controller reachable.
+  files, subdirectory indexes, assets and language variants unchanged and
+  show the localized error pages; `no` answers 404 for an unknown address
+  before anything else is probed, so an application that is routed by a PHP
+  front controller (F5) keeps the default `yes`.

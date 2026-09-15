@@ -17,18 +17,24 @@ image.
 - **F1** `tests/e2e/test_static.py` › test_named_html_file — a named HTML file is delivered.
 - **F1** `tests/e2e/test_static.py` › test_css_asset_served — an asset in a subdirectory is delivered.
 - **F1** `tests/e2e/test_static.py` › test_subdirectory_index — a subdirectory index is delivered.
+- **F1** `tests/e2e/test_front_controller.py` › test_existing_html_file_still_served — a named HTML file is delivered beside a front controller.
+- **F1** `tests/e2e/test_front_controller.py` › test_shell_file_is_still_addressable — `index.html` stays reachable by its own name beside a front controller.
 - **F2** `tests/e2e/test_spa.py` › test_root_serves_shell — the app shell is served at the root.
 - **F2** `tests/e2e/test_spa.py` › test_deep_route_serves_shell — a reload on a client side route returns the shell, not 404.
 - **F2** `tests/e2e/test_spa.py` › test_real_asset_served — a real asset is served, not the shell.
 - **F2** `tests/e2e/test_static.py` › test_unknown_path_falls_back_to_index — an unknown navigation path serves the shell.
 - **F3** `tests/e2e/test_static.py` › test_missing_asset_returns_404 — a missing asset answers 404, never the shell.
 - **F3** `tests/e2e/test_spa.py` › test_missing_asset_returns_404 — a missing SPA asset answers 404, never the shell.
+- **F3** `tests/e2e/test_front_controller.py` › test_missing_asset_returns_404 — a missing asset answers 404 beside a front controller, never the shell.
 - **F4** `tests/e2e/test_lang.py` › test_default_when_no_variant_matches — no matching variant falls through to the neutral file.
 - **F4** `tests/e2e/test_lang.py` › test_german_index_variant — `index.de.html` selected for German.
 - **F4** `tests/e2e/test_lang.py` › test_french_index_variant — `index.fr.html` selected for French (any two-letter code works).
 - **F4** `tests/e2e/test_lang.py` › test_page_language_variant — `page.de.html`/`page.en.html` selected per language.
 - **F4** `tests/e2e/test_lang.py` › test_unknown_language_falls_back_to_default_page — unknown language serves the neutral page.
 - **F4** `tests/e2e/test_spa.py` › test_language_shell_selected_by_accept_language — the localized app shell is selected.
+- **F5** `tests/e2e/test_front_controller.py` › test_unknown_path_goes_to_the_front_controller — with `index.php` beside `index.html` an unknown address reaches the front controller (502 from the closed backend), never the shell and never the PHP source (regression: every permalink answered 200 with the welcome page).
+- **F5** `tests/e2e/test_front_controller.py` › test_unknown_path_with_query_goes_to_the_front_controller — the same with a query string, which must not turn the front controller into a file probe.
+- **F5** `tests/e2e/test_front_controller.py` › test_root_goes_to_the_front_controller — the root is answered by the front controller, not by the shell beside it.
 - **F6** `tests/e2e/test_php_optional.py` › test_starts_and_serves_without_php_fpm — the stack has no php-fpm service and nginx still starts and serves (regression: literal backend hostname aborted startup with "host not found").
 - **F6** `tests/e2e/test_php_optional.py` › test_php_request_without_backend_returns_404 — a PHP request without backend answers 404.
 - **F6** `tests/e2e/test_php_optional.py` › test_php_request_with_path_info_returns_404 — the path-info form answers 404 as well.
@@ -54,6 +60,8 @@ image.
 - **F12** `tests/e2e/test_spa_fallback.py` › test_unknown_path_returns_404_without_fallback — `SPA_FALLBACK=no`: an unknown path answers 404 with the error page, never the start page.
 - **F12** `tests/e2e/test_spa_fallback.py` › test_unknown_path_404_page_localized_without_fallback — `SPA_FALLBACK=no`: the 404 page follows `Accept-Language`.
 - **F12** `tests/e2e/test_spa_fallback.py` › test_missing_asset_returns_404_without_fallback — `SPA_FALLBACK=no`: a missing asset answers 404.
+- **F12** `tests/e2e/test_front_controller.py` › test_unknown_path_returns_404_without_fallback — `SPA_FALLBACK=no` answers 404 before the front controller is probed.
+- **F12** `tests/e2e/test_front_controller.py` › test_existing_file_still_served_without_fallback — `SPA_FALLBACK=no` still delivers existing files beside a front controller.
 - **F12** `tests/e2e/test_spa_fallback.py` › test_default_keeps_the_fallback — without the variable the image answers as before: unknown path 200 with the start page.
 - **F10** `tests/e2e/test_errorpages.py` › test_unreachable_backend_returns_502_page — `PHP_FPM_HOST` override reaches the FastCGI config.
 

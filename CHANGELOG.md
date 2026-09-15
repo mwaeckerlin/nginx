@@ -1,5 +1,10 @@
 # Changelog
 
+- 2026-09-15 **1.3.3**
+    - PHP applications whose image carries a start page in the web root are reachable again under every address: since June a WordPress permalink and every other routed address answered with the welcome page of this image instead of the application, because the static start page was consulted before the application's own entry point. The entry point now decides every address it is there for, and answers "not found" for one it does not know
+        - a purely static or single page application is untouched: where the web root holds no entry point, the start page answers as before, and the setting for a static website keeps answering "not found"
+    - The case is measured end to end for the first time: a service whose web root holds both files, with and without the start page fallback
+
 - 2026-09-06 **1.3.2**
     - An address that matches no file can now answer "not found" instead of the start page: that is the right behaviour for a static website, where a typing error in the address otherwise answers with the start page and search engines index every invented address as a valid page
         - the previous behaviour stays the default, so no running installation changes on an update, and a single page application keeps its deep links and reloads

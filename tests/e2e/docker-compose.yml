@@ -9,6 +9,9 @@
 #   fallback-yes / fallback-no
 #           -> SPA_FALLBACK setting: same files, unknown path answers the
 #              start page in one and 404 in the other
+#   frontcontroller / frontcontroller-nofallback
+#           -> index.php and index.html in the same root: the front
+#              controller decides, the shell never answers an unknown path
 #
 # INVARIANT: this stack contains NO php-fpm service, so the default FastCGI
 # backend hostname is not resolvable. Every service must still start and
@@ -72,6 +75,26 @@ services:
     volumes:
       - ./apps/static:/app:ro
 
+  # index.php AND index.html in the root, the case of every PHP application
+  # built on this image: the front controller must decide every unknown path.
+  # The backend host resolves (the static service) with its port closed, so a
+  # request that reaches the front controller ends in the 502 page.
+  frontcontroller:
+    <<: *nginx
+    environment:
+      PHP_FPM_HOST: static
+    volumes:
+      - ./apps/frontcontroller:/app:ro
+
+  # the same application with the app shell fallback switched off
+  frontcontroller-nofallback:
+    <<: *nginx
+    environment:
+      PHP_FPM_HOST: static
+      SPA_FALLBACK: "no"
+    volumes:
+      - ./apps/frontcontroller:/app:ro
+
   # ROOT override pins the environment variable substitution at startup
   rooted:
     <<: *nginx
@@ -91,6 +114,8 @@ services:
       - deadphp
       - fallback-yes
       - fallback-no
+      - frontcontroller
+      - frontcontroller-nofallback
       - rooted
     environment:
       STATIC_URL:       http://static:8080
@@ -100,5 +125,7 @@ services:
       DEADPHP_URL:      http://deadphp:8080
       FALLBACK_YES_URL: http://fallback-yes:8080
       FALLBACK_NO_URL:  http://fallback-no:8080
+      FC_URL:           http://frontcontroller:8080
+      FC_NOFALLBACK_URL: http://frontcontroller-nofallback:8080
       ROOTED_URL:       http://rooted:8080
     command: ["pytest", "-v", "--tb=short"]

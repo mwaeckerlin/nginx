@@ -20,6 +20,9 @@ BARE_URL         = os.environ.get("BARE_URL",         "http://bare:8080")
 DEADPHP_URL      = os.environ.get("DEADPHP_URL",      "http://deadphp:8080")
 FALLBACK_YES_URL = os.environ.get("FALLBACK_YES_URL", "http://fallback-yes:8080")
 FALLBACK_NO_URL  = os.environ.get("FALLBACK_NO_URL",  "http://fallback-no:8080")
+FC_URL           = os.environ.get("FC_URL",           "http://frontcontroller:8080")
+FC_NOFALLBACK_URL = os.environ.get("FC_NOFALLBACK_URL",
+                                   "http://frontcontroller-nofallback:8080")
 ROOTED_URL       = os.environ.get("ROOTED_URL",       "http://rooted:8080")
 
 
@@ -48,5 +51,6 @@ def get(url: str, path: str, **kwargs) -> requests.Response:
 @pytest.fixture(scope="session", autouse=True)
 def wait_for_services():
     for url in (STATIC_URL, SPA_URL, LANG_URL, BARE_URL, DEADPHP_URL,
-                FALLBACK_YES_URL, FALLBACK_NO_URL, ROOTED_URL):
+                FALLBACK_YES_URL, FALLBACK_NO_URL, FC_URL,
+                FC_NOFALLBACK_URL, ROOTED_URL):
         wait_for_http(url + "/")

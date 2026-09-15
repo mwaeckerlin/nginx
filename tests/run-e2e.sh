@@ -19,14 +19,14 @@ echo "==> Building test stack..."
 docker compose -f "$COMPOSE" build --quiet
 
 echo "==> Starting services..."
-docker compose -f "$COMPOSE" up -d --remove-orphans static spa lang bare deadphp fallback-yes fallback-no rooted
+docker compose -f "$COMPOSE" up -d --remove-orphans static spa lang bare deadphp fallback-yes fallback-no frontcontroller frontcontroller-nofallback rooted
 
 echo "==> Running tests..."
 EXIT=0
 docker compose -f "$COMPOSE" run --rm test-runner "$@" || EXIT=$?
 
 echo "==> Checking nginx logs for TLS handshake errors..."
-LOGS=$(docker compose -f "$COMPOSE" logs static spa lang bare deadphp fallback-yes fallback-no rooted 2>&1)
+LOGS=$(docker compose -f "$COMPOSE" logs static spa lang bare deadphp fallback-yes fallback-no frontcontroller frontcontroller-nofallback rooted 2>&1)
 if echo "$LOGS" | grep -qi "invalid method\|SSL_do_handshake\|no shared cipher"; then
     echo "FAIL: TLS handshake errors found in nginx log"
     echo "$LOGS" | grep -i "invalid method\|SSL_do_handshake\|no shared cipher" | head -5
