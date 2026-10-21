@@ -103,10 +103,19 @@ services:
     volumes:
       - ./apps/static:/app:ro
 
+  # CLIENT_MAX_BODY_SIZE reaches nginx.conf: a body above the limit answers 413
+  limited:
+    <<: *nginx
+    environment:
+      CLIENT_MAX_BODY_SIZE: 1k
+    volumes:
+      - ./apps/static:/app:ro
+
   test-runner:
     build:
       context: .
     depends_on:
+      - limited
       - static
       - spa
       - lang
@@ -128,4 +137,5 @@ services:
       FC_URL:           http://frontcontroller:8080
       FC_NOFALLBACK_URL: http://frontcontroller-nofallback:8080
       ROOTED_URL:       http://rooted:8080
+      LIMITED_URL:      http://limited:8080
     command: ["pytest", "-v", "--tb=short"]

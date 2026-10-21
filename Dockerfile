@@ -39,6 +39,10 @@ ENV PHP_FPM_HOST="php-fpm"
 ENV PHP_FPM_PORT="9000"
 ENV ROOT="/app"
 ENV SPA_FALLBACK="yes"
+ENV CLIENT_MAX_BODY_SIZE="0" \
+    WORKER_CONNECTIONS="1024" \
+    KEEPALIVE_TIMEOUT="65" \
+    FASTCGI_READ_TIMEOUT="60s"
 EXPOSE 8080
 WORKDIR /app
 CMD ["/usr/bin/envwrap", "/etc/nginx.template", "/etc/nginx", "/usr/sbin/nginx"]

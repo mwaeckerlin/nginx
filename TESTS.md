@@ -45,6 +45,7 @@ pytest runs against the real compose stack.
 - **F9** `tests/e2e/test_errorpages.py` › test_error_page_404_english — the friendly English 404 page is served.
 - **F9** `tests/e2e/test_errorpages.py` › test_error_page_404_german — the German 404 variant is selected via `Accept-Language`.
 - **F9** `tests/e2e/test_errorpages.py` › test_unreachable_backend_returns_502_page — the friendly 502 maintenance page is served.
+- **F10** `tests/e2e/test_limits.py` › test_body_above_the_limit_is_refused, test_default_accepts_the_same_body — `CLIENT_MAX_BODY_SIZE=1k` refuses a 2KB body with 413, the default accepts it.
 - **F10** `tests/e2e/test_errorpages.py` › test_root_env_override_served — `ROOT=/app/sub` takes effect at container start.
 - **F12** `tests/e2e/test_spa_fallback.py` › test_known_path_served_with_fallback — `SPA_FALLBACK=yes`: an existing file is delivered.
 - **F12** `tests/e2e/test_spa_fallback.py` › test_unknown_path_serves_start_page_with_fallback — `SPA_FALLBACK=yes`: an unknown path answers 200 with the start page.

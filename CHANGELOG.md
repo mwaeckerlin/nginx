@@ -1,5 +1,8 @@
 # Changelog
 
+- 2026-10-22 **1.3.6**
+    - The request limits are environment variables: `CLIENT_MAX_BODY_SIZE`, `WORKER_CONNECTIONS`, `KEEPALIVE_TIMEOUT`, `FASTCGI_READ_TIMEOUT`, with the values of before as defaults
+
 - 2026-09-26 **1.3.5**
     - The test suite installs its Python packages without a warning
 

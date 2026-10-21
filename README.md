@@ -48,6 +48,7 @@ Exposes nginx on port `8080`.
 - serves from `/app`
 - answer for an address that matches no file via env: `SPA_FALLBACK` (default `yes`), see below
 - FastCGI backend via env: `PHP_FPM_HOST` (default `php-fpm`), `PHP_FPM_PORT` (default `9000`)
+- limits via env: `CLIENT_MAX_BODY_SIZE` (default `0`, no limit), `WORKER_CONNECTIONS` (default `1024`), `KEEPALIVE_TIMEOUT` in seconds (default `65`), `FASTCGI_READ_TIMEOUT` (default `60s`)
 - add additional configuration directly to `/etc/nginx.template` (environment variables allowed in the form of ${VARIABLE_NAME}, but they must be defined)
 - should you need ssl, create `/etc/nginx/dhparam.pem`, see example in [mwaeckerlin/reverse-proxy]
 

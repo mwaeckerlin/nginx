@@ -24,6 +24,7 @@ FC_URL           = os.environ.get("FC_URL",           "http://frontcontroller:80
 FC_NOFALLBACK_URL = os.environ.get("FC_NOFALLBACK_URL",
                                    "http://frontcontroller-nofallback:8080")
 ROOTED_URL       = os.environ.get("ROOTED_URL",       "http://rooted:8080")
+LIMITED_URL      = os.environ.get("LIMITED_URL",      "http://limited:8080")
 
 
 # ----------------------------------------------------------- Helpers -------
@@ -52,5 +53,5 @@ def get(url: str, path: str, **kwargs) -> requests.Response:
 def wait_for_services():
     for url in (STATIC_URL, SPA_URL, LANG_URL, BARE_URL, DEADPHP_URL,
                 FALLBACK_YES_URL, FALLBACK_NO_URL, FC_URL,
-                FC_NOFALLBACK_URL, ROOTED_URL):
+                FC_NOFALLBACK_URL, ROOTED_URL, LIMITED_URL):
         wait_for_http(url + "/")
