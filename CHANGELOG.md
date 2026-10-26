@@ -1,5 +1,8 @@
 # Changelog
 
+- 2026-10-26 **1.3.7**
+    - An address of a directory without its trailing slash, such as `/wp-admin`, is redirected to `/wp-admin/` relative to the request; the redirect pointed at `http://<host>:8080/wp-admin/`, the port inside the container, and lost `https` behind a proxy, so the address answered nothing from outside
+
 - 2026-10-22 **1.3.6**
     - The request limits are environment variables: `CLIENT_MAX_BODY_SIZE`, `WORKER_CONNECTIONS`, `KEEPALIVE_TIMEOUT`, `FASTCGI_READ_TIMEOUT`, with the values of before as defaults
 

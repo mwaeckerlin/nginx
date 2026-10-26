@@ -2,7 +2,7 @@
 
 Numbered register of every end-user visible feature; a number is never reused. Every feature is covered by tests listed in [TESTS.md](TESTS.md); the guard `tests/docs-contract.sh` fails when a feature has no test.
 
-- **F1 — Static file serving.** Everything under `/app` is delivered as-is: root and subdirectory `index.html`, named HTML files and assets (CSS, JS, images, fonts) with long-lived caching. The image ships a built-in default page.
+- **F1 — Static file serving.** Everything under `/app` is delivered as-is: root and subdirectory `index.html`, named HTML files and assets (CSS, JS, images, fonts) with long-lived caching. A directory addressed without its trailing slash is redirected to the address with the slash, relative to the request, so a client behind a proxy keeps its scheme, host and port. The image ships a built-in default page.
 - **F2 — SPA / PWA support.** For client side routed apps an unknown route falls back to the app shell `index.html`, so deep links and reloads work. An application that brings an `index.php` is routed by that front controller instead (F5); the shell answers where no front controller exists.
 - **F3 — Missing assets return 404.** A missing asset (`*.js`, `*.css`, images, fonts, …) answers 404 and never the app shell or a PHP response, so broken builds surface immediately.
 - **F4 — Language variants.** Files named `*.XX.*` (`index.de.html`, `page.fr.html`, …) are picked automatically from the request's `Accept-Language` for any two-letter code, with graceful fallback to the language neutral file.

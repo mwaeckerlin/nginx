@@ -26,6 +26,17 @@ def test_subdirectory_index():
     assert "STATIC-SUB-INDEX" in r.text
 
 
+def test_directory_redirect_keeps_the_address_of_the_request():
+    # A directory without its trailing slash is redirected relative to the
+    # request: behind a proxy the browser asked for https://site/wp-admin, and
+    # an absolute Location built from the listen port sent it to
+    # http://site:8080/wp-admin/, a port that is not open from outside.
+    r = get(STATIC_URL, "/sub", allow_redirects=False,
+            headers={"Host": "site.example:8362"})
+    assert r.status_code == 301
+    assert r.headers["Location"] == "/sub/"
+
+
 def test_missing_asset_returns_404():
     # A missing static asset must 404, never fall back to the app shell.
     r = get(STATIC_URL, "/css/missing.css")
